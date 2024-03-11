@@ -26,7 +26,6 @@ const CardStatsWithAreaChart = (props: any) => {
     avatarIconSize = '1.625rem'
   } = props.data
 
-  // ** Hook
   const theme: any = useTheme()
 
   const options: ApexOptions = {

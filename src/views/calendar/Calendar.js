@@ -1,4 +1,4 @@
-// ** React Import
+/* eslint-disable */
 import { useEffect, useRef } from 'react'
 
 // ** Full Calendar & it's Plugins
@@ -13,10 +13,13 @@ import interactionPlugin from '@fullcalendar/interaction'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 const blankEvent = {
+  id: '',
   title: '',
   start: '',
   end: '',
   allDay: false,
+  completed: '',
+  type: '',
   url: '',
   extendedProps: {
     calendar: '',
@@ -38,6 +41,7 @@ const Calendar = props => {
     setCalendarApi,
     handleSelectEvent,
     handleLeftSidebarToggle,
+    handleUpdateEventToggle,
     handleAddEventSidebarToggle
   } = props
 
@@ -51,8 +55,21 @@ const Calendar = props => {
   }, [calendarApi, setCalendarApi])
   if (store) {
     // ** calendarOptions(Props)
+    const eventsData = store?.events?.map((event, index) => ({
+      id: event.id,
+      title: event.title,
+      start: event.startDateTime,
+      end: event.endDateTime,
+      allDay: false,
+      completed: event.completed,
+      type: event.type,
+      extendedProps: {
+        calendar: calendarsColor[index % calendarsColor.length]
+      }
+    }))
+
     const calendarOptions = {
-      events: store.events.length ? store.events : [],
+      events: eventsData.length ? eventsData : [],
       plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrap5Plugin],
       initialView: 'dayGridMonth',
       headerToolbar: {
@@ -69,7 +86,7 @@ const Calendar = props => {
             Enable dragging and resizing event
             ? Docs: https://fullcalendar.io/docs/editable
           */
-      editable: true,
+      editable: false,
 
       /*
             Enable resizing event from start
@@ -96,8 +113,7 @@ const Calendar = props => {
       navLinks: true,
       eventClassNames({ event: calendarEvent }) {
         // @ts-ignore
-        const colorName = calendarsColor[calendarEvent._def.extendedProps.calendar]
-
+        const colorName = calendarEvent._def.extendedProps.calendar
         return [
           // Background Color
           `bg-${colorName}`
@@ -105,7 +121,7 @@ const Calendar = props => {
       },
       eventClick({ event: clickedEvent }) {
         dispatch(handleSelectEvent(clickedEvent))
-        handleAddEventSidebarToggle()
+        handleUpdateEventToggle()
 
         // * Only grab required field otherwise it goes in infinity loop
         // ! Always grab all fields rendered by form (even if it get `undefined`) otherwise due to Vue3/Composition API you might get: "object is not extensible"
@@ -161,3 +177,4 @@ const Calendar = props => {
 }
 
 export default Calendar
+/* eslint-disable */

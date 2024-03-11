@@ -148,7 +148,9 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = () => {
-    auth.signOut().then(() => console.log('User signed out!'))
+    auth.signOut().then(() => {
+      console.log('User signed out!')
+    })
     setUser(null)
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)

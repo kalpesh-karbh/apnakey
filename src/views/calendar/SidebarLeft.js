@@ -1,4 +1,4 @@
-// ** MUI Imports
+/* eslint-disable */
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
@@ -6,9 +6,6 @@ import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
 import Typography from '@mui/material/Typography'
 import FormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Third Party Imports
-import DatePicker from 'react-datepicker'
 
 // ** Icons Imports
 import Icon from 'src/@core/components/icon'
@@ -29,22 +26,48 @@ const SidebarLeft = props => {
     handleAllCalendars,
     handleCalendarsUpdate,
     handleLeftSidebarToggle,
-    handleAddEventSidebarToggle
+    handleAddEventSidebarToggle,
+    handleAddTaskToggle
   } = props
-  const colorsArr = calendarsColor ? Object.entries(calendarsColor) : []
 
-  const renderFilters = colorsArr.length
-    ? colorsArr.map(([key, value]) => {
+  const bookingfilter = [{ title: 'Booked' }, { title: 'Manual Booked' }]
+
+  const colorsArr = calendarsColor
+  const renderFilters = bookingfilter.length
+    ? bookingfilter?.map((value, index) => {
+        const colorIndex = index % colorsArr.length
         return (
           <FormControlLabel
-            key={key}
-            label={key}
+            key={index}
+            label={value?.title}
             sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
             control={
               <Checkbox
-                color={value}
-                checked={store.selectedCalendars.includes(key)}
-                onChange={() => dispatch(handleCalendarsUpdate(key))}
+                color={colorsArr[colorIndex]}
+                checked={true}
+                // onChange={() => dispatch(handleCalendarsUpdate(index))}
+                sx={{ p: 1 }}
+              />
+            }
+          />
+        )
+      })
+    : null
+
+  const renderActivityFilters = store?.activityGroups.length
+    ? store?.activityGroups?.map((value, index) => {
+        const colorIndex = index % colorsArr.length
+        return (
+          <FormControlLabel
+            key={index}
+            label={value?.title}
+            sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
+            control={
+              <Checkbox
+                color={colorsArr[colorIndex]}
+                checked={true}
+                // onChange={() => dispatch(handleCalendarsUpdate(index))}
+                sx={{ p: 1 }}
               />
             }
           />
@@ -55,6 +78,10 @@ const SidebarLeft = props => {
   const handleSidebarToggleSidebar = () => {
     handleAddEventSidebarToggle()
     dispatch(handleSelectEvent(null))
+  }
+  const handleTaskToggleModel = () => {
+    dispatch(handleSelectEvent(null))
+    handleAddTaskToggle()
   }
   if (renderFilters) {
     return (
@@ -89,23 +116,21 @@ const SidebarLeft = props => {
         }}
       >
         <Box sx={{ p: 6, width: '100%' }}>
-          <Button fullWidth variant='contained' sx={{ '& svg': { mr: 2 } }} onClick={handleSidebarToggleSidebar}>
+          <Button fullWidth variant='contained' sx={{ '& svg': { mr: 2 }, my: 2 }} onClick={handleSidebarToggleSidebar}>
             <Icon icon='tabler:plus' fontSize='1.125rem' />
-            Add Event
+            Add Booking
+          </Button>
+          <Button
+            fullWidth
+            color='secondary'
+            variant='contained'
+            sx={{ '& svg': { mr: 2 }, my: 2 }}
+            onClick={handleTaskToggleModel}
+          >
+            <Icon icon='tabler:plus' fontSize='1.125rem' />
+            Add Task
           </Button>
         </Box>
-
-        <Divider sx={{ width: '100%', m: '0 !important' }} />
-        <DatePickerWrapper
-          sx={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            '& .react-datepicker': { boxShadow: 'none !important', border: 'none !important' }
-          }}
-        >
-          <DatePicker inline onChange={date => calendarApi.gotoDate(date)} />
-        </DatePickerWrapper>
         <Divider sx={{ width: '100%', m: '0 !important' }} />
         <Box sx={{ p: 6, width: '100%', display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
           <Typography variant='body2' sx={{ mb: 2, color: 'text.disabled', textTransform: 'uppercase' }}>
@@ -117,11 +142,30 @@ const SidebarLeft = props => {
             control={
               <Checkbox
                 checked={store.selectedCalendars.length === colorsArr.length}
-                onChange={e => dispatch(handleAllCalendars(e.target.checked))}
+                // onChange={e => dispatch(handleAllCalendars(e.target.checked))}
+                sx={{ p: 1 }}
               />
             }
           />
           {renderFilters}
+        </Box>
+        <Divider sx={{ width: '100%', m: '0 !important' }} />
+        <Box sx={{ p: 6, width: '100%', display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+          <Typography variant='body2' sx={{ mb: 2, color: 'text.disabled', textTransform: 'uppercase' }}>
+            Activity Groups
+          </Typography>
+          <FormControlLabel
+            label='View All'
+            sx={{ '& .MuiFormControlLabel-label': { color: 'text.secondary' } }}
+            control={
+              <Checkbox
+                checked={store.selectedCalendars.length === colorsArr.length}
+                // onChange={e => dispatch(handleAllCalendars(e.target.checked))}
+                sx={{ p: 1 }}
+              />
+            }
+          />
+          {renderActivityFilters}
         </Box>
       </Drawer>
     )
@@ -131,3 +175,4 @@ const SidebarLeft = props => {
 }
 
 export default SidebarLeft
+/* eslint-disable */

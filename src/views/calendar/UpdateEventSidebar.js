@@ -63,7 +63,7 @@ const CustomCloseButton = styled(IconButton)(({ theme }) => ({
   }
 }))
 
-const AddEventSidebar = props => {
+const UpdateEventSidebar = props => {
   // ** Props
   const {
     store,
@@ -74,8 +74,8 @@ const AddEventSidebar = props => {
     calendarApi,
     deleteEvent,
     handleSelectEvent,
-    addEventSidebarOpen,
-    handleAddEventSidebarToggle
+    updateEventOpen,
+    handleUpdateEventToggle
   } = props
 
   // ** States
@@ -94,7 +94,7 @@ const AddEventSidebar = props => {
     setValues(defaultState)
     clearErrors()
     dispatch(handleSelectEvent(null))
-    handleAddEventSidebarToggle()
+    handleUpdateEventToggle()
   }
 
   const onSubmit = data => {
@@ -162,7 +162,7 @@ const AddEventSidebar = props => {
     } else {
       resetToEmptyValues()
     }
-  }, [addEventSidebarOpen, resetToStoredValues, resetToEmptyValues, store.selectedEvent])
+  }, [updateEventOpen, resetToStoredValues, resetToEmptyValues, store.selectedEvent])
 
   const PickersComponent = forwardRef(({ ...props }, ref) => {
     return (
@@ -205,7 +205,7 @@ const AddEventSidebar = props => {
 
   return (
     <Dialog
-      open={addEventSidebarOpen}
+      open={updateEventOpen}
       onClose={() => handleSidebarClose()}
       fullWidth
       maxWidth='sm'
@@ -228,7 +228,7 @@ const AddEventSidebar = props => {
             </CustomCloseButton>
             <Box sx={{ mb: 8, textAlign: 'center' }}>
               <Typography variant='h5' sx={{ mb: 3 }}>
-                Add Booking
+                Update Booking
               </Typography>
             </Box>
             <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
@@ -588,5 +588,5 @@ const AddEventSidebar = props => {
   )
 }
 
-export default AddEventSidebar
+export default UpdateEventSidebar
 /* eslint-disable */

@@ -2,7 +2,7 @@
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Components Imports
-import PrintPage from 'src/views/apps/invoice/print/PrintPage'
+import PrintPage from 'src/views/invoice/print/PrintPage'
 
 const InvoicePrint = () => {
   return <PrintPage id='4987' />

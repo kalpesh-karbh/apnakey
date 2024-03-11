@@ -1,8 +1,8 @@
-// ** React Imports
-import { useState, SyntheticEvent, Fragment } from 'react'
+/* eslint-disable */
+import { useState, SyntheticEvent, Fragment, useEffect } from 'react'
 
 // ** Next Import
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -20,8 +20,13 @@ import Icon from 'src/@core/components/icon'
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
 
+// ** Actions Imports
+import { fetchData } from 'src/store/apps/user'
+
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { redirect } from 'next/dist/server/api-utils'
+import { useDispatch, useSelector } from 'react-redux'
 
 interface Props {
   settings: Settings
@@ -43,9 +48,15 @@ const MenuItemStyled = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
 }))
 
 const UserDropdown = (props: Props) => {
+  const dispatch = useDispatch()
+  const store = useSelector((state: any) => state?.user?.data)
+
+  useEffect(() => {
+    ;(dispatch as any)(fetchData())
+  }, [dispatch])
+
   // ** Props
   const { settings } = props
-
   // ** States
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
@@ -101,9 +112,9 @@ const UserDropdown = (props: Props) => {
       >
         <Avatar
           alt='John Doe'
-          src='/images/avatars/1.png'
+          src={store?.imgUrl ? store.imgUrl : '/images/custom/apnakey-logo.png'}
           onClick={handleDropdownOpen}
-          sx={{ width: 38, height: 38 }}
+          sx={{ width: 38, height: 38, backgroundColor: '#f1f1f1' }}
         />
       </Badge>
       <Menu
@@ -124,50 +135,36 @@ const UserDropdown = (props: Props) => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              <Avatar
+                alt='John Doe'
+                src={store?.imgUrl ? store?.imgUrl : '/images/custom/apnakey-logo.png'}
+                sx={{ width: '2.5rem', height: '2.5rem', backgroundColor: '#f1f1f1' }}
+              />
             </Badge>
             <Box sx={{ display: 'flex', ml: 2.5, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 500 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 500 }}>{store?.name}</Typography>
               <Typography variant='body2'>Admin</Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItemStyled sx={{ p: 0 }} onClick={() => router.push('/account-settings/account')}>
           <Box sx={styles}>
             <Icon icon='tabler:user-check' />
-            My Profile
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:settings' />
-            Settings
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:credit-card' />
-            Billing
+            Account
           </Box>
         </MenuItemStyled>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItemStyled sx={{ p: 0 }} onClick={() => router.push('/faq')}>
           <Box sx={styles}>
             <Icon icon='tabler:lifebuoy' />
-            Help
+            Support
           </Box>
         </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItemStyled sx={{ p: 0 }} onClick={() => router.push('/faq')}>
           <Box sx={styles}>
             <Icon icon='tabler:info-circle' />
             FAQ
-          </Box>
-        </MenuItemStyled>
-        <MenuItemStyled sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='tabler:currency-dollar' />
-            Pricing
           </Box>
         </MenuItemStyled>
         <Divider sx={{ my: theme => `${theme.spacing(2)} !important` }} />
@@ -183,3 +180,4 @@ const UserDropdown = (props: Props) => {
 }
 
 export default UserDropdown
+/* eslint-disable */

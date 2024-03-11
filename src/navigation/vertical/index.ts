@@ -54,7 +54,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Account',
-      path: '/account-settings',
+      path: '/account-settings/account',
       icon: 'tabler:user'
     }
   ]

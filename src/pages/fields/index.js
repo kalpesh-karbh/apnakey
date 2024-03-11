@@ -41,7 +41,7 @@ const Fields = () => {
   // ** Hooks
   useEffect(() => {
     dispatch(fetchData())
-  }, [dispatch])
+  }, [dispatch, store])
 
   const columns = [
     {

@@ -15,7 +15,7 @@ export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async Dat
     }
   })
 
-  return response.data
+  return response?.data
 })
 
 // ** Fetch Events
@@ -64,7 +64,8 @@ export const appCalendarSlice = createSlice({
   initialState: {
     events: [],
     selectedEvent: null,
-    selectedCalendars: ['Personal', 'Business', 'Family', 'Holiday', 'ETC']
+    selectedCalendars: ['Personal', 'Business', 'Family', 'Holiday', 'ETC'],
+    activityGroups: []
   },
   reducers: {
     handleSelectEvent: (state, action) => {
@@ -95,7 +96,7 @@ export const appCalendarSlice = createSlice({
       state.events = action.payload
     })
     builder.addCase(fetchGroupActivity.fulfilled, (state, action) => {
-      state.group_activities = action.payload.activityGroups
+      state.activityGroups = action.payload.activityGroups
     })
   }
 })

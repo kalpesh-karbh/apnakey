@@ -1,34 +1,82 @@
+/* eslint-disable */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
-import axios from 'axios'
+// import axios from 'axios'
+import AxiosInstance from 'src/configs/AxiosInstance'
+import { PROFILE, CONTACTS, PAYMENT } from 'src/configs/Endpoints'
 
-// ** Fetch Users
-export const fetchData = createAsyncThunk('appUsers/fetchData', async params => {
-  const response = await axios.get('/apps/users/list', {
-    params
-  })
-
+// ** Fetch Account Details
+export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
+  const response = await AxiosInstance.get(PROFILE)
+  if (response.status != 200) {
+    popMsg('something went wrong please try again', 'Error')
+  }
   return response.data
 })
 
-// ** Add User
-export const addUser = createAsyncThunk('appUsers/addUser', async (data, { getState, dispatch }) => {
-  const response = await axios.post('/apps/users/add-user', {
+// ** Update Profile
+export const updateProfile = createAsyncThunk('appUsers/updateProfile', async (data, { getState, dispatch }) => {
+  const response = await AxiosInstance.put(PROFILE, {
     data
   })
-  dispatch(fetchData(getState().user.params))
-
+  if (response.status === 200) {
+    popMsg('Account Update Successfully', 'Success')
+    await dispatch(fetchData())
+  } else {
+    popMsg('something went wrong', 'Error')
+  }
   return response.data
 })
 
-// ** Delete User
-export const deleteUser = createAsyncThunk('appUsers/deleteUser', async (id, { getState, dispatch }) => {
-  const response = await axios.delete('/apps/users/delete', {
+// **Add Contact
+export const addContact = createAsyncThunk('appUsers/addContact', async (data, { getState, dispatch }) => {
+  const response = await AxiosInstance.post(CONTACTS, {
+    data
+  })
+  if (response.status === 200) {
+    popMsg('Contact Add Successfully', 'Success')
+    await dispatch(fetchData())
+  } else {
+    popMsg('something went wrong', 'Error')
+  }
+  return response.data
+})
+
+// ** Delete Contact
+export const deleteContact = createAsyncThunk('appUsers/deleteContact', async (id, { getState, dispatch }) => {
+  const response = await AxiosInstance.delete(CONTACTS, {
     data: id
   })
-  dispatch(fetchData(getState().user.params))
+  if (response.status === 200) {
+    popMsg('Contact Deleted Successfully', 'Success')
+    await dispatch(fetchData())
+  } else {
+    popMsg('something went wrong', 'Error')
+  }
+  return response.data
+})
 
+// ** Fetch Payment Details
+export const fetchPayment = createAsyncThunk('appUsers/fetchPayment', async params => {
+  const response = await AxiosInstance.get(PAYMENT)
+  if (response.status != 200) {
+    popMsg('something went wrong please try again', 'Error')
+  }
+  return response.data
+})
+
+// ** Update Payment Details
+export const updatePayment = createAsyncThunk('appUsers/updatePayment', async (data, { getState, dispatch }) => {
+  const response = await AxiosInstance.post(PAYMENT, {
+    data
+  })
+  if (response.status === 200) {
+    popMsg('Payment Method Update Successfully', 'Success')
+    await dispatch(fetchData())
+  } else {
+    popMsg('something went wrong', 'Error')
+  }
   return response.data
 })
 
@@ -36,19 +84,20 @@ export const appUsersSlice = createSlice({
   name: 'appUsers',
   initialState: {
     data: [],
-    total: 1,
-    params: {},
-    allData: []
+    contacts: [],
+    payment: []
   },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchData.fulfilled, (state, action) => {
-      state.data = action.payload.users
-      state.total = action.payload.total
-      state.params = action.payload.params
-      state.allData = action.payload.allData
+      state.data = action.payload
+      state.contacts = action.payload.contacts
+    })
+    builder.addCase(fetchPayment.fulfilled, (state, action) => {
+      state.payment = action.payload
     })
   }
 })
 
 export default appUsersSlice.reducer
+/* eslint-disable */

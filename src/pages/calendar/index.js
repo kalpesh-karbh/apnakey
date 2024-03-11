@@ -1,72 +1,64 @@
-/* eslint-disable */
-import { useState, useEffect } from 'react'
+// ** React Imports
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
+// ** Redux Imports
+import { useDispatch, useSelector } from 'react-redux'
+
 // ** Hooks
 import { useSettings } from 'src/@core/hooks/useSettings'
-import { useDispatch, useSelector } from 'react-redux'
 
 // ** FullCalendar & App Components Imports
 import Calendar from 'src/views/calendar/Calendar'
 import SidebarLeft from 'src/views/calendar/SidebarLeft'
 import CalendarWrapper from 'src/@core/styles/libs/fullcalendar'
-
-// import AddEventSidebar from 'src/views/calendar/AddEventSidebar'
+import AddEventSidebar from 'src/views/calendar/AddEventSidebar'
 
 // ** Actions
 import {
+  addEvent,
   fetchEvents,
-
-  // addEvent,
-  // deleteEvent,
+  fetchGroupActivity,
+  deleteEvent,
   updateEvent,
   handleSelectEvent,
   handleAllCalendars,
   handleCalendarsUpdate
 } from 'src/store/apps/calendar'
+import UpdateEventSidebar from 'src/views/calendar/UpdateEventSidebar'
+import AddTask from 'src/views/calendar/AddTask'
 
 // ** CalendarColors
-const calendarsColor = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
-}
+const calendarsColor = ['error', 'primary', 'warning', 'success', 'info']
 
 const AppCalendar = () => {
-  const dispatch = useDispatch()
-  const store = useSelector(state => state?.calendar)
-
-  const EndDateRange = new Date().toISOString().split('T')[0]
-  const selectStartDate = new Date()
-  selectStartDate.setMonth(selectStartDate.getMonth() - 1)
-  const StartDateRange = selectStartDate.toISOString().split('T')[0]
-  const DateRange = {
-    StartDateRange: StartDateRange,
-    EndDateRange: EndDateRange
-  }
+  // ** States
   const [calendarApi, setCalendarApi] = useState(null)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false)
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState(false)
-
-  useEffect(() => {
-    dispatch(fetchEvents(DateRange))
-  }, [store, dispatch])
+  const [addTaskOpen, setAddTaskOpen] = useState(false)
+  const [updateEventOpen, setUpdateEventOpen] = useState(false)
 
   // ** Hooks
   const { settings } = useSettings()
+  const dispatch = useDispatch()
+  const store = useSelector(state => state.calendar)
 
   // ** Vars
   const leftSidebarWidth = 300
-
-  // const addEventSidebarWidth = 400
+  const addEventSidebarWidth = 400
   const { skin, direction } = settings
   const mdAbove = useMediaQuery(theme => theme.breakpoints.up('md'))
+  useEffect(() => {
+    dispatch(fetchEvents(store.selectedCalendars))
+    dispatch(fetchGroupActivity())
+  }, [dispatch, store.selectedCalendars])
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
+  const handleAddTaskToggle = () => setAddTaskOpen(!addTaskOpen)
+  const handleUpdateEventToggle = () => setUpdateEventOpen(!updateEventOpen)
   const handleAddEventSidebarToggle = () => setAddEventSidebarOpen(!addEventSidebarOpen)
 
   return (
@@ -77,8 +69,10 @@ const AppCalendar = () => {
         ...(skin === 'bordered' && { border: theme => `1px solid ${theme.palette.divider}` })
       }}
     >
-      {/* <SidebarLeft
+      <SidebarLeft
+        store={store}
         mdAbove={mdAbove}
+        dispatch={dispatch}
         calendarApi={calendarApi}
         calendarsColor={calendarsColor}
         leftSidebarOpen={leftSidebarOpen}
@@ -88,7 +82,8 @@ const AppCalendar = () => {
         handleCalendarsUpdate={handleCalendarsUpdate}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-      /> */}
+        handleAddTaskToggle={handleAddTaskToggle}
+      />
       <Box
         sx={{
           p: 6,
@@ -100,7 +95,9 @@ const AppCalendar = () => {
           ...(mdAbove ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0 } : {})
         }}
       >
-        {/* <Calendar
+        <Calendar
+          store={store}
+          dispatch={dispatch}
           direction={direction}
           updateEvent={updateEvent}
           calendarApi={calendarApi}
@@ -108,10 +105,13 @@ const AppCalendar = () => {
           setCalendarApi={setCalendarApi}
           handleSelectEvent={handleSelectEvent}
           handleLeftSidebarToggle={handleLeftSidebarToggle}
+          handleUpdateEventToggle={handleUpdateEventToggle}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        /> */}
+        />
       </Box>
-      {/* <AddEventSidebar
+      <AddEventSidebar
+        store={store}
+        dispatch={dispatch}
         addEvent={addEvent}
         updateEvent={updateEvent}
         deleteEvent={deleteEvent}
@@ -120,10 +120,33 @@ const AppCalendar = () => {
         handleSelectEvent={handleSelectEvent}
         addEventSidebarOpen={addEventSidebarOpen}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-      /> */}
+      />
+      <UpdateEventSidebar
+        store={store}
+        dispatch={dispatch}
+        addEvent={addEvent}
+        updateEvent={updateEvent}
+        deleteEvent={deleteEvent}
+        calendarApi={calendarApi}
+        drawerWidth={addEventSidebarWidth}
+        handleSelectEvent={handleSelectEvent}
+        updateEventOpen={updateEventOpen}
+        handleUpdateEventToggle={handleUpdateEventToggle}
+      />
+      <AddTask
+        store={store}
+        dispatch={dispatch}
+        addEvent={addEvent}
+        updateEvent={updateEvent}
+        deleteEvent={deleteEvent}
+        calendarApi={calendarApi}
+        drawerWidth={addEventSidebarWidth}
+        handleSelectEvent={handleSelectEvent}
+        addTaskOpen={addTaskOpen}
+        handleAddTaskToggle={handleAddTaskToggle}
+      />
     </CalendarWrapper>
   )
 }
 
 export default AppCalendar
-/* eslint-disable */

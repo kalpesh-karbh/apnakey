@@ -28,38 +28,32 @@ const Home = () => {
     ;(dispatch as any)(fetchData())
   }, [dispatch])
 
-  const statsWithAreaChartData1 = [
-    {
-      stats: `£ ${store?.totalEarning ?? 0}`,
-      chartColor: 'success',
-      avatarColor: 'success',
-      avatarIcon: 'tabler:cash',
-      title: 'Total Earning',
-      chartSeries: [{ data: [40, 4, 58, 12, 35, 10, 84] }]
-    }
-  ]
+  const statsWithAreaChartData1 = {
+    stats: `£ ${store?.totalEarning ?? 0}`,
+    chartColor: 'success',
+    avatarColor: 'success',
+    avatarIcon: 'tabler:cash',
+    title: 'Total Earning',
+    chartSeries: [{ data: [40, 4, 58, 12, 35, 10, 84] }]
+  }
 
-  const statsWithAreaChartData2 = [
-    {
-      stats: `£ ${store?.annual ?? 0}`,
-      chartColor: 'error',
-      avatarColor: 'error',
-      title: 'Annual Earning',
-      avatarIcon: 'tabler:cash',
-      chartSeries: [{ data: [44, 75, 24, 57, 6, 84] }]
-    }
-  ]
+  const statsWithAreaChartData2 = {
+    stats: `£ ${store?.annual ?? 0}`,
+    chartColor: 'error',
+    avatarColor: 'error',
+    title: 'Annual Earning',
+    avatarIcon: 'tabler:cash',
+    chartSeries: [{ data: [44, 75, 24, 57, 6, 84] }]
+  }
 
-  const statsWithAreaChartData3 = [
-    {
-      stats: `£ ${store?.weeklyBooked ?? 0}`,
-      chartColor: 'warning',
-      avatarColor: 'warning',
-      title: 'Weekly Earning',
-      avatarIcon: 'tabler:cash',
-      chartSeries: [{ data: [30, 84, 11, 76, 0, 49, 9] }]
-    }
-  ]
+  const statsWithAreaChartData3 = {
+    stats: `£ ${store?.weeklyBooked ?? 0}`,
+    chartColor: 'warning',
+    avatarColor: 'warning',
+    title: 'Weekly Earning',
+    avatarIcon: 'tabler:cash',
+    chartSeries: [{ data: [30, 84, 11, 76, 0, 49, 9] }]
+  }
 
   return (
     <Grid container spacing={6}>
